@@ -1,5 +1,5 @@
 from Objects.Level import Level
-from Objects.Cache import add_image, add_spritesheet
+from Objects.Cache import add_image, add_spritesheet, add_font
 from utils import value_or_none
 
 
@@ -18,6 +18,10 @@ class Platformer:
                 name, vals["image"], vals["x_images"], vals["y_images"],
                 changes_per_s=value_or_none(vals, "changesPerSecond"), duration=value_or_none(vals, "duration")
             )
+
+        for name in properties["font"]:
+            vals = properties["font"][name]
+            add_font(name, vals["font"], vals["size"])
 
         for name, l in levels.items():
             self.levels[name] = Level(screen, l)

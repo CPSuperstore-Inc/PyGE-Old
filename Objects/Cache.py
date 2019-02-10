@@ -1,9 +1,12 @@
 import pygame
+import os
+
 from SpriteSheet import SpriteSheet
 from ..exceptions import NotInCacheException
 
 Images = {}
 SpriteSheets = {}
+Font = {}
 
 
 def add_image(name, path, w=None, h=None):
@@ -31,3 +34,18 @@ def get_spritesheet(name):
         return SpriteSheets[name]
     else:
         raise NotInCacheException("'{}' Is Not In SpriteSheet Cache".format(name))
+
+
+def add_font(name, font, size):
+    if os.path.isfile(font):
+        font = pygame.font.Font(font, size)
+    else:
+        font = pygame.font.SysFont(font, size)
+    Font[name] = font
+
+
+def get_font(name):
+    if name in Font:
+        return Font[name]
+    else:
+        raise NotInCacheException("'{}' Is Not In Font Cache".format(name))

@@ -1,5 +1,7 @@
 from Blocks import *
+from Cache import get_font
 import GlobalVariable
+from ..utils import value_or_default
 
 
 class Level:
@@ -9,6 +11,7 @@ class Level:
         self.level = []
         self.objects = {}
         self.properties = {}
+        self.text = []
         self.block_size = (16, 16)
 
         self.create_map()
@@ -35,6 +38,12 @@ class Level:
                 self.properties.update(p)
 
             del self.properties["import"]
+
+        if "text" in self.properties:
+            for t in self.properties["text"]:
+                font = get_font(t["font"])
+                text = font.render(t['text'], value_or_default(t, "antialiasing", True), t['color'])
+                self.text.append({"text": text, "x": t['x'], "y": t['y']})
 
         x, y = (0, 0)
         for row in level:
@@ -64,6 +73,9 @@ class Level:
     def draw(self):
         for block in self.level:
             block.draw()
+
+        for t in self.text:
+            self.screen.blit(t['text'], (t['x'], t['y']))
 
     def cleanup(self):
         for obj in GlobalVariable.delete_queue:
