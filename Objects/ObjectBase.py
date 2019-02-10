@@ -14,6 +14,7 @@ class ObjectBase:
         self.w = kwargs["w"]
         self.h = kwargs["h"]
         self.level = kwargs["level"]
+        self.multi_jump = False
         self.visible = True
         self.speed = 100
 
@@ -71,6 +72,7 @@ class ObjectBase:
                 t = time() - self.fall_start
                 self.is_projectile = True
                 change = (self.vertical_velocity * t) + (0.5 * GlobalVariable.g * t ** 2)
+
                 if change <= 0:
                     self.vertical_velocity = False
                     self.fall_start = time()
@@ -173,6 +175,8 @@ class ObjectBase:
 
     def jump(self, jump_velocity):
         print self.is_projectile
-        if self.is_projectile is False:
+        if self.multi_jump is True:
+            self.vertical_velocity = jump_velocity
+        elif self.is_projectile is False:
             self.fall_start = time()
             self.vertical_velocity = jump_velocity
