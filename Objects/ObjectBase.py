@@ -1,8 +1,8 @@
 import pygame
 from math import sin, cos, degrees
 from time import time
-import GlobalVariable
-from Ticker import Ticker
+import PyGE.Objects.GlobalVariable as GlobalVariable
+from PyGE.Objects.Ticker import Ticker
 
 
 class ObjectBase:
@@ -174,7 +174,7 @@ class ObjectBase:
         self.delete()
 
     def jump(self, jump_velocity):
-        print self.is_projectile
+        print(self.is_projectile)
         if self.multi_jump is True:
             self.vertical_velocity = jump_velocity
         elif self.is_projectile is False:

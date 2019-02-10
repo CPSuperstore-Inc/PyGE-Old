@@ -1,7 +1,7 @@
 import pygame
 import os
 
-from SpriteSheet import SpriteSheet
+from PyGE.Objects.SpriteSheet import SpriteSheet
 from ..exceptions import NotInCacheException
 
 Images = {}

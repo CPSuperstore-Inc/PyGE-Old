@@ -1,6 +1,6 @@
-from Objects.Level import Level
-from Objects.Cache import add_image, add_spritesheet, add_font
-from utils import value_or_none
+from PyGE.Objects.Level import Level
+from PyGE.Objects.Cache import add_image, add_spritesheet, add_font
+from PyGE.utils import value_or_none
 
 
 class Platformer:
