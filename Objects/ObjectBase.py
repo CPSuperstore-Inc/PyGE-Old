@@ -35,6 +35,9 @@ class ObjectBase:
         self.last_x_change = 0
         self.last_y_change = 0
 
+        self.vertical_velocity = False
+        self.is_projectile = False
+
     @property
     def get_pos(self):
         return self.x, self.y
@@ -64,9 +67,32 @@ class ObjectBase:
 
     def physics_update(self):
         if self.physics is True:
-            self.check_collision()
-            if self.fall_start is not False:
-                self.y -= int(round(GlobalVariable.g * (time() - self.fall_start), 0))
+            if self.vertical_velocity is not False:
+                t = time() - self.fall_start
+                self.is_projectile = True
+                change = (self.vertical_velocity * t) + (0.5 * GlobalVariable.g * t ** 2)
+                if change <= 0:
+                    self.vertical_velocity = False
+                    self.fall_start = time()
+                    self.is_projectile = False
+                for i in range(int(abs(change))):
+                    self.y -= 1
+                    if self.check_collision(collision_action=False):
+                        self.y += 1
+                        self.fall_start = False
+                        self.is_projectile = False
+            else:
+                self.check_collision()
+                if self.fall_start is not False:
+                    self.is_projectile = True
+                    change = int(GlobalVariable.g * (time() - self.fall_start))
+                    for i in range(abs(change)):
+                        self.y += 1
+                        if self.check_collision(collision_action=False):
+                            self.y -= 1
+                            self.fall_start = False
+                            self.is_projectile = False
+                            break
 
     def draw_hitbox(self, color=None, thickness=1):
         if color is None:
@@ -144,3 +170,9 @@ class ObjectBase:
 
     def __del__(self):
         self.delete()
+
+    def jump(self, jump_velocity):
+        print self.is_projectile
+        if self.is_projectile is False:
+            self.fall_start = time()
+            self.vertical_velocity = jump_velocity

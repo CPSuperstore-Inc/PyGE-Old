@@ -1,7 +1,8 @@
 import pygame
 
-from Platformer.Objects.ObjectBase import ObjectBase
-from Platformer.Objects.Cache import get_image
+from PyGE.Objects.ObjectBase import ObjectBase
+from PyGE.Objects.Cache import get_image, get_spritesheet
+from ..exceptions import DisplayMethodNotDefinedException
 
 
 class Air(ObjectBase):
@@ -16,16 +17,24 @@ class Block(ObjectBase):
 
         self.color = None
         self.image = None
+        self.spritesheet = None
         if "color" in kwargs:
             self.color = kwargs["color"]
-        else:
+        elif "image" in kwargs:
             self.image = get_image(kwargs["image"])
+        elif "spritesheet" in kwargs:
+            self.spritesheet = get_spritesheet(kwargs["spritesheet"])
+        else:
+            raise DisplayMethodNotDefinedException("No Method Of Display Has Been Defined For An Object")
 
     def draw(self):
-        if self.image is None:
+        if self.color is not None:
             pygame.draw.rect(self.screen, self.color, (self.x, self.y, self.w, self.h))
-        else:
+        elif self.image is not None:
             self.screen.blit(self.image, (self.x, self.y))
+        else:
+            self.screen.blit(self.spritesheet.current_image, (self.x, self.y))
+
 
 
 class Player(ObjectBase):
