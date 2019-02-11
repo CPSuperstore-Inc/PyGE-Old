@@ -31,3 +31,13 @@ class Platformer:
 
     def get_object(self, name):
         return self.selected_level.objects[name]
+
+    def update(self):
+        self.selected_level.update()
+
+    def draw(self):
+        self.selected_level.draw()
+
+    def update_draw(self):
+        self.selected_level.update()
+        self.selected_level.draw()

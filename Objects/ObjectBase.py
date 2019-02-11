@@ -1,8 +1,12 @@
 import pygame
 from math import sin, cos, degrees
 from time import time
+
 import PyGE.Objects.GlobalVariable as GlobalVariable
 from PyGE.Objects.Ticker import Ticker
+from PyGE.Objects.Cache import get_image, get_spritesheet
+from PyGE.utils import value_or_default
+from ..exceptions import DisplayMethodNotDefinedException
 
 
 class ObjectBase:
@@ -14,9 +18,23 @@ class ObjectBase:
         self.w = kwargs["w"]
         self.h = kwargs["h"]
         self.level = kwargs["level"]
+        self.visible = value_or_default(kwargs, "visible", True)
         self.multi_jump = False
-        self.visible = True
         self.speed = 100
+
+        self.color = None
+        self.image = None
+        self.spritesheet = None
+
+        if self.visible is True:
+            if "color" in kwargs:
+                self.color = kwargs["color"]
+            elif "image" in kwargs:
+                self.image = get_image(kwargs["image"])
+            elif "spritesheet" in kwargs:
+                self.spritesheet = get_spritesheet(kwargs["spritesheet"])
+            else:
+                raise DisplayMethodNotDefinedException("No Method Of Display Has Been Defined For Block Type '{}'".format(type(self).__name__))
 
         self.tick = Ticker()
 
@@ -102,7 +120,13 @@ class ObjectBase:
         pygame.draw.rect(self.screen, color, self.hitbox, thickness)
 
     def draw(self):
-        pass
+        if self.visible is True:
+            if self.color is not None:
+                pygame.draw.rect(self.screen, self.color, (self.x, self.y, self.w, self.h))
+            elif self.image is not None:
+                self.screen.blit(self.image, (self.x, self.y))
+            else:
+                self.screen.blit(self.spritesheet.current_image, (self.x, self.y))
 
     def check_collision(self, collision_action=True):
         collide = False
@@ -174,7 +198,6 @@ class ObjectBase:
         self.delete()
 
     def jump(self, jump_velocity):
-        print(self.is_projectile)
         if self.multi_jump is True:
             self.vertical_velocity = jump_velocity
         elif self.is_projectile is False:
