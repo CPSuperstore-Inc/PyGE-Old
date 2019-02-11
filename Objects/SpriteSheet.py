@@ -1,6 +1,8 @@
 import pygame
 from time import time
 
+from PyGE.Objects.GlobalVariable import block_size
+
 
 class SpriteSheet:
     def __init__(self, image, w, h, duration=None):
@@ -16,7 +18,7 @@ class SpriteSheet:
         y = 0
         for i in range(h):
             for i in range(w):
-                self.images.append(self.get_image(x, y, sprite_w, sprite_h))
+                self.images.append(pygame.transform.scale(self.get_image(x, y, sprite_w, sprite_h), block_size))
                 x += sprite_w
             x = 0
             y += sprite_h
