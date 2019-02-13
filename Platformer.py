@@ -32,6 +32,20 @@ class Platformer:
     def get_object(self, name):
         return self.selected_level.objects[name]
 
+    def get_object_by_name(self, name):
+        objects = []
+        for block in self.selected_level.level:
+            if block.name == name:
+                objects.append(block)
+        return objects
+
+    def get_objects_except_name(self, name):
+        objects = []
+        for block in self.selected_level.level:
+            if block.name != name:
+                objects.append(block)
+        return objects
+
     def update(self):
         self.selected_level.update()
 
