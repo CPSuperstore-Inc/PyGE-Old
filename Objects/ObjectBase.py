@@ -46,7 +46,7 @@ class ObjectBase:
         self.clock = pygame.time.Clock()
         self.frame_delay = -1
 
-        self.name = self.__get_optional_property("name")
+        self.name = value_or_default(kwargs, "name", "Anonymous")
 
         self.solid = True
         self.angle = 0
@@ -149,10 +149,10 @@ class ObjectBase:
     def directional_move(self, x_change, y_change, check_collision=True):
         x_change *= self.speed
         y_change *= self.speed
-        self.x += x_change * self.frame_delay
-        self.y += y_change * self.frame_delay
         self.last_x_change = x_change * self.frame_delay
         self.last_y_change = y_change * self.frame_delay
+        self.x += self.last_x_change
+        self.y += self.last_y_change
 
         if check_collision is True and self.movable:
             self.check_collision()

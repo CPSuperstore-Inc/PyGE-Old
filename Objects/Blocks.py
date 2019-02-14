@@ -18,4 +18,3 @@ class Block(ObjectBase):
 class Player(ObjectBase):
     def __init__(self, **kwargs):
         ObjectBase.__init__(self, **kwargs)
-        self.movable = True

@@ -55,3 +55,13 @@ class Platformer:
     def update_draw(self):
         self.selected_level.update()
         self.selected_level.draw()
+
+    def move_all(self, objects, x, y, check_collision=True):
+        for b in objects:
+            b.directional_move(x, y, check_collision=check_collision)
+
+    def undo_last_move(self, objects=None):
+        if objects is None:
+            objects = self.selected_level.level
+        for block in objects:
+            block.undo_last_move()
