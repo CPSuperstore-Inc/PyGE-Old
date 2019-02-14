@@ -5,19 +5,24 @@ from time import time
 import PyGE.Objects.GlobalVariable as GlobalVariable
 from PyGE.Objects.Ticker import Ticker
 from PyGE.Objects.Cache import get_image, get_spritesheet
-from PyGE.utils import value_or_default
+from PyGE.utils import value_or_default, get_mandatory_value
 from ..exceptions import DisplayMethodNotDefinedException
 
 
 class ObjectBase:
     def __init__(self, **kwargs):
         self.kwargs = kwargs
-        self.screen = kwargs["screen"]
-        self.x = kwargs["x"]
-        self.y = kwargs["y"]
-        self.w = kwargs["w"]
-        self.h = kwargs["h"]
-        self.level = kwargs["level"]
+
+        # mandatory arguements
+        self.screen = get_mandatory_value(kwargs, "screen")
+        self.x = get_mandatory_value(kwargs, "x")
+        self.y = get_mandatory_value(kwargs, "y")
+        self.w = get_mandatory_value(kwargs, "w")
+        self.h = get_mandatory_value(kwargs, "h")
+        self.level = get_mandatory_value(kwargs, "level")
+
+        # optional arge=uements
+        self.state = value_or_default(kwargs, "state", "idle")
         self.visible = value_or_default(kwargs, "visible", True)
         self.multi_jump = False
         self.speed = 100
@@ -203,3 +208,10 @@ class ObjectBase:
         elif self.is_projectile is False:
             self.fall_start = time()
             self.vertical_velocity = jump_velocity
+
+    def set_state(self, state):
+        self.state = state
+        self.on_state_change(state)
+
+    def on_state_change(self, new_state):
+        pass

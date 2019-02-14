@@ -4,3 +4,7 @@ class NotInCacheException(Exception):
 
 class DisplayMethodNotDefinedException(Exception):
     pass
+
+
+class MissingMandatoryArguementException(Exception):
+    pass
