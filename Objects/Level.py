@@ -1,6 +1,5 @@
-from PyGE.Objects.Blocks import *   # Reflection is used here. This import may appear unused, but it is used.
+import PyGE.GlobalVariable as GlobalVariable
 from PyGE.Objects.Cache import get_font
-import PyGE.Objects.GlobalVariable as GlobalVariable
 from ..utils import value_or_default
 
 

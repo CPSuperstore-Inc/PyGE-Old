@@ -1,7 +1,8 @@
-import pygame
 from time import time
 
-from PyGE.Objects.GlobalVariable import block_size
+import pygame
+
+from PyGE.GlobalVariable import block_size
 
 
 class SpriteSheet:

@@ -1,10 +1,11 @@
-import pygame
 from math import sin, cos, degrees
 from time import time
 
-import PyGE.Objects.GlobalVariable as GlobalVariable
-from PyGE.Objects.Ticker import Ticker
+import pygame
+
+import PyGE.GlobalVariable as GlobalVariable
 from PyGE.Objects.Cache import get_image, get_spritesheet
+from PyGE.Objects.Ticker import Ticker
 from PyGE.utils import value_or_default, get_mandatory_value
 from ..exceptions import DisplayMethodNotDefinedException
 
