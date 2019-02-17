@@ -8,3 +8,7 @@ class DisplayMethodNotDefinedException(Exception):
 
 class MissingMandatoryArguementException(Exception):
     pass
+
+
+class UndefinedBlockException(Exception):
+    pass

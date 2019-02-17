@@ -1,7 +1,14 @@
 from PyGE.Objects.Blocks import *
+
+try:
+    from blocks import *
+except ImportError:
+    print("No Custom Blocks Defined")
+
 import PyGE.GlobalVariable as GlobalVariable
 from PyGE.Objects.Cache import get_font
 from ..utils import value_or_default
+from PyGE.exceptions import UndefinedBlockException
 
 
 class Level:
@@ -56,7 +63,10 @@ class Level:
                 props["y"] = y
                 props["w"], props["h"] = self.block_size
                 props["level"] = self.level
-                thing = eval(data["model"])(**props)
+                try:
+                    thing = eval(data["model"])(**props)
+                except NameError:
+                    raise UndefinedBlockException("The Block Model '{}' Does Not Have Defined Class. Please Define It, And Try Again.".format(data["model"]))
                 self.level.append(thing)
                 if thing.name is not None:
                     self.objects[thing.name] = thing
