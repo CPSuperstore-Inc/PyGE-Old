@@ -23,10 +23,10 @@ def get_image(name):
         return pygame.image.load(name)
 
 
-def add_spritesheet(name, image, w, h, changes_per_s=None, duration=None):
+def add_spritesheet(name, image, w, h, changes_per_s=None, duration=None, final_size=None, invisible_color=(0, 0, 0)):
     if changes_per_s is not None:
         duration = 1.0 / changes_per_s
-    SpriteSheets[name] = SpriteSheet(image, w, h, duration)
+    SpriteSheets[name] = SpriteSheet(image, w, h, duration, final_size=final_size, invisible_color=invisible_color)
 
 
 def get_spritesheet(name):

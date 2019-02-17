@@ -6,7 +6,7 @@ from PyGE.GlobalVariable import block_size
 
 
 class SpriteSheet:
-    def __init__(self, image, w, h, duration=None):
+    def __init__(self, image, w, h, duration=None, final_size=None, invisible_color=(0, 0, 1)):
         self.base_image = pygame.image.load(image)
         self.images = []
         self.duration = duration
@@ -14,12 +14,16 @@ class SpriteSheet:
         self.selected_image = 0
         sprite_w = self.base_image.get_width() / w
         sprite_h = self.base_image.get_height() / h
+        self.final_size = final_size
+        self.invisible_color = invisible_color
+        if final_size is None:
+            self.final_size = block_size
 
         x = 0
         y = 0
         for i in range(h):
             for i in range(w):
-                self.images.append(pygame.transform.scale(self.get_image(x, y, sprite_w, sprite_h), block_size))
+                self.images.append(pygame.transform.scale(self.get_image(x, y, sprite_w, sprite_h), self.final_size))
                 x += sprite_w
             x = 0
             y += sprite_h
@@ -27,7 +31,7 @@ class SpriteSheet:
     def get_image(self, x, y, width, height):
         image = pygame.Surface([width, height]).convert()
         image.blit(self.base_image, (0, 0), (x, y, width, height))
-        image.set_colorkey((0, 0, 1))
+        image.set_colorkey(self.invisible_color)
         return image
 
     @property

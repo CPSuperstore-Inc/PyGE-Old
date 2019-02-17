@@ -1,3 +1,4 @@
+from PyGE.Objects.Blocks import *
 import PyGE.GlobalVariable as GlobalVariable
 from PyGE.Objects.Cache import get_font
 from ..utils import value_or_default

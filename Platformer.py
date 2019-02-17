@@ -1,6 +1,6 @@
 from PyGE.Objects.Level import Level
 from PyGE.Objects.Cache import add_image, add_spritesheet, add_font
-from PyGE.utils import value_or_none
+from PyGE.utils import value_or_none, value_or_default
 
 
 class Platformer:
@@ -16,7 +16,8 @@ class Platformer:
             vals = properties["spritesheets"][name]
             add_spritesheet(
                 name, vals["image"], vals["x_images"], vals["y_images"],
-                changes_per_s=value_or_none(vals, "changesPerSecond"), duration=value_or_none(vals, "duration")
+                changes_per_s=value_or_none(vals, "changesPerSecond"), duration=value_or_none(vals, "duration"),
+                final_size=value_or_none(vals, "resize"), invisible_color=value_or_default(vals, "invisible", (0, 0, 0))
             )
 
         for name in properties["font"]:
