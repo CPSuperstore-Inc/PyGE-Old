@@ -1,6 +1,7 @@
 from PyGE.Objects.Level import Level
 from PyGE.Objects.Cache import add_image, add_spritesheet, add_font
 from PyGE.utils import value_or_none, value_or_default
+from PyGE.exceptions import UndefinedLevelException
 
 
 class Platformer:
@@ -9,10 +10,10 @@ class Platformer:
         self.levels = {}
         self.selected_level = None
 
-        for name, src in properties["images"].items():
+        for name, src in value_or_default(properties, "images", {}).items():
             add_image(name, src)
 
-        for name in properties["spritesheets"]:
+        for name in value_or_default(properties, "spritesheets", {}):
             vals = properties["spritesheets"][name]
             add_spritesheet(
                 name, vals["image"], vals["x_images"], vals["y_images"],
@@ -20,7 +21,7 @@ class Platformer:
                 final_size=value_or_none(vals, "resize"), invisible_color=value_or_default(vals, "invisible", (0, 0, 0))
             )
 
-        for name in properties["font"]:
+        for name in value_or_default(properties, "font", {}):
             vals = properties["font"][name]
             add_font(name, vals["font"], vals["size"])
 
@@ -28,6 +29,8 @@ class Platformer:
             self.levels[name] = Level(screen, l)
 
     def set_level(self, name):
+        if name not in self.levels:
+            raise UndefinedLevelException("'{}' Is Not A Valid Level Name. Check Your Spelling, And Try Again.".format(name))
         self.selected_level = self.levels[name]
 
     def get_object(self, name):
@@ -71,3 +74,8 @@ class Platformer:
             objects = self.selected_level.level
         for block in objects:
             block.undo_last_move()
+
+    def move_one_with_undo(self, thing, x, y):
+        thing.directional_move(x, y, check_collision=False)
+        if thing.check_collision(collision_action=False):
+            thing.undo_last_move()

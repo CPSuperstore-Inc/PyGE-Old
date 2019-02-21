@@ -12,3 +12,7 @@ class MissingMandatoryArguementException(Exception):
 
 class UndefinedBlockException(Exception):
     pass
+
+
+class UndefinedLevelException(Exception):
+    pass
