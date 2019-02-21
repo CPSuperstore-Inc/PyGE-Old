@@ -1,5 +1,6 @@
 from PyGE.Objects.Level import Level
 from PyGE.Objects.Cache import add_image, add_spritesheet, add_font
+from PyGE.Objects.ObjectBase import ObjectBase
 from PyGE.utils import value_or_none, value_or_default
 from PyGE.exceptions import UndefinedLevelException
 
@@ -79,3 +80,16 @@ class Platformer:
         thing.directional_move(x, y, check_collision=False)
         if thing.check_collision(collision_action=False):
             thing.undo_last_move()
+
+    def center_world_about(self, center:ObjectBase):
+        screen_center = (self.screen.get_width() / 2, self.screen.get_height() / 2)
+        player_center = (center.w / 2, center.h / 2)
+        new_player_pos = (screen_center[0] - player_center[0], screen_center[1] - player_center[1])
+
+        delta = (new_player_pos[0] - center.x, new_player_pos[1] - center.y)
+
+        for o in self.selected_level.level:
+            o.x += delta[0]
+            o.y += delta[1]
+
+
