@@ -65,7 +65,7 @@ class Platformer:
         for b in objects:
             b.directional_move(x, y, check_collision=check_collision)
 
-    def move_all_with_undo(self, objects, x, y, player, collision_action=True):
+    def move_all_with_undo(self, objects, x, y, player, collision_action=False):
         self.move_all(objects, x, y)
         if player.check_collision(collision_action=collision_action):
             self.undo_last_move(objects)
