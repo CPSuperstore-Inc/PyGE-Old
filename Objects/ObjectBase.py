@@ -141,8 +141,8 @@ class ObjectBase:
                 continue
             if self.has_collided(item):
                 if collision_action:
-                    self.collision(item)
-                    item.collision(self)
+                    self.on_collision(item)
+                    item.on_collision(self)
                 collide = True
         if self.physics is True:
             if collide is False:
@@ -193,8 +193,8 @@ class ObjectBase:
             return True
         return False
 
-    def collision(self, other):
-        self.undo_last_move()
+    def on_collision(self, other:'ObjectBase'):
+        pass
 
     def delete(self):
         if self not in GlobalVariable.delete_queue:

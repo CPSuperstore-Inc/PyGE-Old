@@ -78,7 +78,7 @@ class Platformer:
 
     def move_one_with_undo(self, thing, x, y):
         thing.directional_move(x, y, check_collision=False)
-        if thing.check_collision(collision_action=False):
+        if thing.check_collision():
             thing.undo_last_move()
 
     def center_world_about(self, center:ObjectBase):
