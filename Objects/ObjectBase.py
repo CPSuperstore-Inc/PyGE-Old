@@ -85,6 +85,9 @@ class ObjectBase:
         self.frame_delay = self.tick.tick
         if self.physics is True:
             self.physics_update()
+        if 1 in pygame.mouse.get_pressed():
+            if self.hitbox.collidepoint(pygame.mouse.get_pos()):
+                self.on_click(pygame.mouse.get_pressed())
 
     def update_draw(self):
         self.update()
@@ -193,9 +196,6 @@ class ObjectBase:
             return True
         return False
 
-    def on_collision(self, other:'ObjectBase'):
-        pass
-
     def delete(self):
         if self not in GlobalVariable.delete_queue:
             GlobalVariable.delete_queue.append(self)
@@ -215,4 +215,10 @@ class ObjectBase:
         self.on_state_change(state)
 
     def on_state_change(self, new_state):
+        pass
+
+    def on_collision(self, other:'ObjectBase'):
+        pass
+
+    def on_click(self, clicked:tuple):
         pass
