@@ -32,6 +32,8 @@ class ObjectBase:
         self.image = None
         self.spritesheet = None
 
+        self.clicked = False
+
         if self.visible is True:
             if "color" in kwargs:
                 self.color = kwargs["color"]
@@ -40,7 +42,8 @@ class ObjectBase:
             elif "spritesheet" in kwargs:
                 self.spritesheet = get_spritesheet(kwargs["spritesheet"])
             else:
-                raise DisplayMethodNotDefinedException("No Method Of Display Has Been Defined For Block Type '{}'".format(type(self).__name__))
+                raise DisplayMethodNotDefinedException(
+                    "No Method Of Display Has Been Defined For Block Type '{}'".format(type(self).__name__))
 
         self.tick = Ticker()
 
@@ -86,8 +89,11 @@ class ObjectBase:
         if self.physics is True:
             self.physics_update()
         if 1 in pygame.mouse.get_pressed():
-            if self.hitbox.collidepoint(pygame.mouse.get_pos()):
+            if self.hitbox.collidepoint(pygame.mouse.get_pos()) and self.clicked is False:
+                self.clicked = True
                 self.on_click(pygame.mouse.get_pressed())
+        else:
+            self.clicked = False
 
     def update_draw(self):
         self.update()
@@ -217,8 +223,8 @@ class ObjectBase:
     def on_state_change(self, new_state):
         pass
 
-    def on_collision(self, other:'ObjectBase'):
+    def on_collision(self, other: 'ObjectBase'):
         pass
 
-    def on_click(self, clicked:tuple):
+    def on_click(self, clicked: tuple):
         pass
