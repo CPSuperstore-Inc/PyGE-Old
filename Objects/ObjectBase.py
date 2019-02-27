@@ -11,6 +11,10 @@ from ..exceptions import DisplayMethodNotDefinedException
 
 
 class ObjectBase:
+    """
+    This is the class which every block/entity, which is placed in the level map MUST inherit from.
+    This class takes care of all the basic functions for a block. You can overide anything you need.
+    """
     def __init__(self, **kwargs):
         self.kwargs = kwargs
 
@@ -68,21 +72,31 @@ class ObjectBase:
 
     @property
     def get_pos(self):
+        """
+        Returns the x and y position of the top-left corner of the object as a tuple.
+        This is the floating-point value of the coordinates.
+        """
         return self.x, self.y
 
     @property
     def get_pos_int(self):
+        """
+        Returns the x and y position of the top-left corner of the object as a tuple.
+        This is the rounded integer value of the coordinates.
+        """
         return int(round(self.x, 0)), int(round(self.y, 0))
 
     @property
     def hitbox(self):
+        """
+        Returns the object's hitbox as Pygame.rect object.
+        """
         return pygame.draw.rect(self.screen, (0, 0, 0), (self.x, self.y, self.w, self.h), 1)
 
-    def __get_optional_property(self, prop):
-        if prop in self.kwargs:
-            return self.kwargs[prop]
-
     def update(self):
+        """
+        Updates the object. This includes Physics, collision, and mouse updates. 
+        """
         if self.movable:
             self.check_collision()
         self.frame_delay = self.tick.tick
@@ -96,10 +110,16 @@ class ObjectBase:
             self.clicked = False
 
     def update_draw(self):
+        """
+        Updates the object, then draws it to the screen. 
+        """
         self.update()
         self.draw()
 
     def physics_update(self):
+        """
+        Update's the object's physics (provided the object is marked as a physics object) 
+        """
         if self.physics is True:
             if self.vertical_velocity is not False:
                 t = time() - self.fall_start
@@ -129,7 +149,10 @@ class ObjectBase:
                             self.is_projectile = False
                             break
 
-    def draw_hitbox(self, color=None, thickness=1):
+    def draw_hitbox(self, color:tuple=None, thickness:int=1):
+        """
+        Draws the hitbox of the object to the screen (handy for debugging).
+        """
         if color is None:
             color = (255, 255, 255)
         pygame.draw.rect(self.screen, color, self.hitbox, thickness)
@@ -143,7 +166,10 @@ class ObjectBase:
             else:
                 self.screen.blit(self.spritesheet.current_image, (self.x, self.y))
 
-    def check_collision(self, collision_action=True):
+    def check_collision(self, collision_action:bool=True):
+        """
+        Checks collision between this object, and the rest of the objects in the level 
+        """
         collide = False
         for item in self.level:
             if item == self or item.solid is False:
@@ -162,6 +188,9 @@ class ObjectBase:
         return collide
 
     def directional_move(self, x_change, y_change, check_collision=True):
+        """
+        Moves the object along a directional vector (use rotational_move to move along an angle vector)
+        """
         x_change *= self.speed
         y_change *= self.speed
         self.last_x_change = x_change * self.frame_delay
@@ -173,10 +202,16 @@ class ObjectBase:
             self.check_collision()
 
     def undo_last_move(self):
+        """
+        Undoes the object's last movement 
+        """
         self.x -= self.last_x_change
         self.y -= self.last_y_change
 
     def rotational_move(self, distance, angle=None):
+        """
+        Moves the object a set distance at a specified angle (degrees)
+        """
         if angle is None:
             angle = self.angle
 
@@ -185,7 +220,10 @@ class ObjectBase:
         self.x = self.last_x_change
         self.y = self.last_y_change
 
-    def has_collided(self, other):
+    def has_collided(self, other:'ObjectBase'):
+        """
+        Check if this object has collided with the specified object 
+        """
         x1 = self.x
         y1 = self.y
         x2 = x1 + self.w
@@ -203,6 +241,9 @@ class ObjectBase:
         return False
 
     def delete(self):
+        """
+        Deletes this object 
+        """
         if self not in GlobalVariable.delete_queue:
             GlobalVariable.delete_queue.append(self)
 
@@ -210,13 +251,19 @@ class ObjectBase:
         self.delete()
 
     def jump(self, jump_velocity):
+        """
+        Causes the object to jump at the specified jump velocity 
+        """
         if self.multi_jump is True:
             self.vertical_velocity = jump_velocity
         elif self.is_projectile is False:
             self.fall_start = time()
             self.vertical_velocity = jump_velocity
 
-    def set_state(self, state):
+    def set_state(self, state:str):
+        """
+        Set the object's state 
+        """
         self.state = state
         self.on_state_change(state)
 
