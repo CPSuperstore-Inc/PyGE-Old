@@ -19,7 +19,7 @@ class Level:
         self.objects = {}
         self.properties = {}
         self.text = []
-        self.block_size = (16, 16)
+        self.block_size = GlobalVariable.block_size
         self.platformer = platformer
 
         self.create_map()
