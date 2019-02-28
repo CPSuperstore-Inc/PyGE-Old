@@ -55,6 +55,9 @@ class Level:
         x, y = (0, 0)
         for row in level:
             for col in row:
+                if col == 0 and 0 not in blocks:
+                    x += self.block_size[0]
+                    continue
                 data = blocks[col]
                 props = data.copy()
                 del props["model"]
