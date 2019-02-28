@@ -29,7 +29,7 @@ class Platformer:
             add_font(name, vals["font"], vals["size"])
 
         for name, l in levels.items():
-            self.levels[name] = Level(screen, l)
+            self.levels[name] = Level(screen, l, self)
 
     def set_level(self, name):
         if name not in self.levels:

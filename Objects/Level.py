@@ -12,7 +12,7 @@ from PyGE.exceptions import UndefinedBlockException
 
 
 class Level:
-    def __init__(self, screen, level_data):
+    def __init__(self, screen, level_data, platformer):
         self.screen = screen
         self.level_data = level_data
         self.level = []
@@ -20,6 +20,7 @@ class Level:
         self.properties = {}
         self.text = []
         self.block_size = (16, 16)
+        self.platformer = platformer
 
         self.create_map()
 
@@ -68,6 +69,7 @@ class Level:
                 props["y"] = y
                 props["w"], props["h"] = self.block_size
                 props["level"] = self.level
+                props["platformer"] = self.platformer
                 try:
                     thing = eval(data["model"])(**props)
                 except NameError:

@@ -24,6 +24,7 @@ class ObjectBase:
         self.y = get_mandatory_value(kwargs, "y")
         self.w = get_mandatory_value(kwargs, "w")
         self.h = get_mandatory_value(kwargs, "h")
+        self.platformer = get_mandatory_value(kwargs, "platformer")
         self.level = get_mandatory_value(kwargs, "level")
 
         # optional arge=uements
@@ -268,6 +269,9 @@ class ObjectBase:
         """
         self.state = state
         self.on_state_change(state)
+
+    def set_level(self, name:str):
+        self.platformer.set_level(name)
 
     def on_state_change(self, new_state):
         pass
