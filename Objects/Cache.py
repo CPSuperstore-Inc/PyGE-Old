@@ -2,6 +2,7 @@ import pygame
 import os
 
 from PyGE.Objects.SpriteSheet import SpriteSheet
+from PyGE.GlobalVariable import block_size
 from ..exceptions import NotInCacheException
 
 Images = {}
@@ -12,7 +13,8 @@ Font = {}
 def add_image(name, path, w=None, h=None):
     img = pygame.image.load(path)
     if w is not None:
-        img.transform.scale(w, h)
+        w, h = block_size
+    img.transform.scale(w, h)
     Images[name] = img
 
 
