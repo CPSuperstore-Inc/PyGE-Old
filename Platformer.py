@@ -1,3 +1,5 @@
+from typing import List
+
 from PyGE.Objects.Level import Level
 from PyGE.Objects.Cache import add_image, add_spritesheet, add_font
 from PyGE.Objects.ObjectBase import ObjectBase
@@ -65,10 +67,12 @@ class Platformer:
         for b in objects:
             b.directional_move(x, y, check_collision=check_collision)
 
-    def move_all_with_undo(self, objects, x, y, player, collision_action=False):
-        self.move_all(objects, x, y)
-        if player.check_collision(collision_action=collision_action):
-            self.undo_last_move(objects)
+    def move_all_with_undo(self, objects: List['ObjectBase'], x, y, player: 'ObjectBase'):
+        for thing in objects:
+            thing.directional_move(x, y, check_collision=False)
+        if player.check_collision(True):
+            for thing in objects:
+                thing.undo_last_move()
 
     def undo_last_move(self, objects=None):
         if objects is None:
