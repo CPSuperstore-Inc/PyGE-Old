@@ -27,6 +27,8 @@ class ObjectBase:
         self.platformer = get_mandatory_value(kwargs, "platformer")
         self.level = get_mandatory_value(kwargs, "level")
 
+        self.initial_x, self.initial_y = self.x, self.y
+
         # optional arge=uements
         self.state = value_or_default(kwargs, "state", "idle")
         self.visible = value_or_default(kwargs, "visible", True)
@@ -269,6 +271,9 @@ class ObjectBase:
         """
         self.state = state
         self.on_state_change(state)
+
+    def reset_pos(self):
+        self.x, self.y = self.initial_x, self.initial_y
 
     def set_level(self, name:str):
         self.platformer.set_level(name)

@@ -104,3 +104,7 @@ class Level:
         for o in objects:
             o.x += x
             o.y += y
+
+    def reset_level(self):
+        for l in self.level:
+            l.reset_pos()
