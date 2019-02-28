@@ -1,7 +1,7 @@
+import pygame
+
 from math import sin, cos, degrees
 from time import time
-
-import pygame
 
 import PyGE.GlobalVariable as GlobalVariable
 from PyGE.Objects.Cache import get_image, get_spritesheet
@@ -172,13 +172,17 @@ class ObjectBase:
         """
         collide = False
         for item in self.level:
-            if item == self or item.solid is False:
-                continue
-            if self.has_collided(item):
-                if collision_action:
-                    self.on_collision(item)
-                    item.on_collision(self)
-                collide = True
+            if item.solid:
+                if item == self:
+                    continue
+                if self.has_collided(item):
+                    if collision_action:
+                        self.on_collision(item)
+                        item.on_collision(self)
+                    collide = True
+            else:
+                self.on_collision(item)
+                item.on_collision(self)
         if self.physics is True:
             if collide is False:
                 if self.fall_start is False:
