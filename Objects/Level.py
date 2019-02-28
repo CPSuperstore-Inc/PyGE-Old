@@ -58,6 +58,8 @@ class Level:
                 if col == 0 and 0 not in blocks:
                     x += self.block_size[0]
                     continue
+                if col not in blocks:
+                    raise UndefinedBlockException("Found Block ID: '{}' In The Map, Which Does Not Have A Definition In The 'Blocks' Section.".format(col))
                 data = blocks[col]
                 props = data.copy()
                 del props["model"]
