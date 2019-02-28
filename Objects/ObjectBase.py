@@ -55,6 +55,7 @@ class ObjectBase:
         self.fall_start = False
         self.fall_velocity = 0
         self.movable = False
+        self.collision_events = True
 
         self.clock = pygame.time.Clock()
         self.frame_delay = -1
@@ -172,17 +173,14 @@ class ObjectBase:
         """
         collide = False
         for item in self.level:
-            if item.solid:
-                if item == self:
-                    continue
-                if self.has_collided(item):
-                    if collision_action:
-                        self.on_collision(item)
-                        item.on_collision(self)
+            if item == self:
+                continue
+            if self.has_collided(item):
+                if collision_action:
+                    self.on_collision(item)
+                    item.on_collision(self)
+                if item.solid:
                     collide = True
-            else:
-                self.on_collision(item)
-                item.on_collision(self)
         if self.physics is True:
             if collide is False:
                 if self.fall_start is False:
