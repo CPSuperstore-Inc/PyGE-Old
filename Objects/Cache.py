@@ -14,7 +14,7 @@ def add_image(name, path, w=None, h=None):
     img = pygame.image.load(path)
     if w is not None:
         w, h = block_size
-    img.transform.scale(w, h)
+    img = pygame.transform.scale(img, (w, h))
     Images[name] = img
 
 
