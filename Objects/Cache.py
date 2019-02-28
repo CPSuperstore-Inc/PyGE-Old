@@ -12,7 +12,7 @@ Font = {}
 
 def add_image(name, path, w=None, h=None):
     img = pygame.image.load(path)
-    if w is not None:
+    if w is None:
         w, h = block_size
     img = pygame.transform.scale(img, (w, h))
     Images[name] = img
