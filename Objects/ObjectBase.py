@@ -273,9 +273,15 @@ class ObjectBase:
         self.on_state_change(state)
 
     def reset_pos(self):
+        """
+        Set the object's position to the initial x and y 
+        """
         self.x, self.y = self.initial_x, self.initial_y
 
     def set_level(self, name:str):
+        """
+        Set the selected level 
+        """
         self.platformer.set_level(name)
 
     def on_state_change(self, new_state):
