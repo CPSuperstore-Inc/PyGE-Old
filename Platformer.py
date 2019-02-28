@@ -12,6 +12,7 @@ class Platformer:
         self.screen = screen
         self.levels = {}
         self.selected_level = None
+        self.level_changed = True
 
         for name, src in value_or_default(properties, "images", {}).items():
             add_image(name, src)
@@ -35,6 +36,7 @@ class Platformer:
         if name not in self.levels:
             raise UndefinedLevelException("'{}' Is Not A Valid Level Name. Check Your Spelling, And Try Again.".format(name))
         self.selected_level = self.levels[name]
+        self.level_changed = True
 
     def get_object(self, name):
         return self.selected_level.objects[name]
@@ -96,4 +98,9 @@ class Platformer:
             o.x += delta[0]
             o.y += delta[1]
 
-
+    @property
+    def has_level_changed(self):
+        if self.level_changed:
+            self.level_changed = False
+            return True
+        return False
