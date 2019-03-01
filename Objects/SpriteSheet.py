@@ -6,7 +6,7 @@ from PyGE.GlobalVariable import block_size
 
 
 class SpriteSheet:
-    def __init__(self, image, w, h, duration=None, final_size=None, invisible_color=(0, 0, 1)):
+    def __init__(self, image:str, w:int, h:int, duration:float=None, final_size:tuple=None, invisible_color:tuple=(0, 0, 1)):
         self.base_image = pygame.image.load(image)
         self.images = []
         self.duration = duration

@@ -3,13 +3,14 @@ from random import uniform
 from math import sin, cos, pi
 
 from PyGE.Objects.SpriteSheet import SpriteSheet
+from pygame import Surface
 
 
 RAD_TO_DEG = pi / 180
 
 
 class ParticleGenerator:
-    def __init__(self, screen, x, y, angle, velocity, min_life, max_life, spawn_per_s, spritesheet:SpriteSheet):
+    def __init__(self, screen:'Surface', x:int, y:int, angle:float, velocity:float, min_life:float, max_life:float, spawn_per_s:float, spritesheet:'SpriteSheet'):
         self.velocity = velocity
         self.angle = angle
         self.spawn_delay = 1.0 / spawn_per_s
@@ -41,7 +42,7 @@ class ParticleGenerator:
 
 
 class Particle:
-    def __init__(self, screen, x, y, life, spritesheet:SpriteSheet):
+    def __init__(self, screen:'Surface', x:int, y:int, life:float, spritesheet:'SpriteSheet'):
         self.spritesheet = spritesheet
         self.life = life
         self.y = y

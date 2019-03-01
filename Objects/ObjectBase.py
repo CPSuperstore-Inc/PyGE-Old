@@ -15,7 +15,7 @@ class ObjectBase:
     This is the class which every block/entity, which is placed in the level map MUST inherit from.
     This class takes care of all the basic functions for a block. You can overide anything you need.
     """
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs:dict):
         self.kwargs = kwargs
 
         # mandatory arguements
@@ -192,7 +192,7 @@ class ObjectBase:
                 self.fall_start = False
         return collide
 
-    def directional_move(self, x_change, y_change, check_collision=True):
+    def directional_move(self, x_change:float, y_change:float, check_collision:bool=True):
         """
         Moves the object along a directional vector (use rotational_move to move along an angle vector)
         """
@@ -213,7 +213,7 @@ class ObjectBase:
         self.x -= self.last_x_change
         self.y -= self.last_y_change
 
-    def rotational_move(self, distance, angle=None):
+    def rotational_move(self, distance:float, angle:float=None):
         """
         Moves the object a set distance at a specified angle (degrees)
         """
@@ -255,7 +255,7 @@ class ObjectBase:
     def __del__(self):
         self.delete()
 
-    def jump(self, jump_velocity):
+    def jump(self, jump_velocity:float):
         """
         Causes the object to jump at the specified jump velocity 
         """
@@ -273,12 +273,18 @@ class ObjectBase:
         self.on_state_change(state)
 
     def reset_pos(self):
+        """
+        Set the object's position to the initial x and y 
+        """
         self.x, self.y = self.initial_x, self.initial_y
 
     def set_level(self, name:str):
+        """
+        Set the selected level 
+        """
         self.platformer.set_level(name)
 
-    def on_state_change(self, new_state):
+    def on_state_change(self, new_state:str):
         pass
 
     def on_collision(self, other: 'ObjectBase'):

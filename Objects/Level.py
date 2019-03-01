@@ -1,3 +1,5 @@
+from typing import List
+
 from PyGE.Objects.Blocks import *
 
 try:
@@ -7,12 +9,14 @@ except ImportError:
 
 import PyGE.GlobalVariable as GlobalVariable
 from PyGE.Objects.Cache import get_font
+from PyGE.Platformer import Platformer
 from ..utils import value_or_default
 from PyGE.exceptions import UndefinedBlockException
+from pygame import Surface
 
 
 class Level:
-    def __init__(self, screen, level_data, platformer):
+    def __init__(self, screen:'Surface', level_data:dict, platformer:'Platformer'):
         self.screen = screen
         self.level_data = level_data
         self.level = []
@@ -24,13 +28,13 @@ class Level:
 
         self.create_map()
 
-    def create_map(self, level_data=None):
+    def create_map(self, level_data:dict=None):
         if level_data is None:
             level_data = self.level_data
 
         self.__get_blocks(level_data)
 
-    def __get_blocks(self, ld):
+    def __get_blocks(self, ld:dict):
         blocks = ld["blocks"]
         level = ld["map"]
         self.properties = ld["properties"]
@@ -100,7 +104,7 @@ class Level:
                 self.level.remove(obj)
             GlobalVariable.delete_queue.remove(obj)
 
-    def move(self, objects, x, y):
+    def move(self, objects: List['ObjectBase'], x:int, y:int):
         for o in objects:
             o.x += x
             o.y += y

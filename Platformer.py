@@ -1,4 +1,5 @@
 from typing import List
+from pygame import Surface
 
 from PyGE.Objects.Level import Level
 from PyGE.Objects.Cache import add_image, add_spritesheet, add_font
@@ -8,7 +9,7 @@ from PyGE.exceptions import UndefinedLevelException
 
 
 class Platformer:
-    def __init__(self, screen, levels, properties):
+    def __init__(self, screen:'Surface', levels:dict, properties:dict):
         self.screen = screen
         self.levels = {}
         self.selected_level = None
@@ -32,23 +33,23 @@ class Platformer:
         for name, l in levels.items():
             self.levels[name] = Level(screen, l, self)
 
-    def set_level(self, name):
+    def set_level(self, name:str):
         if name not in self.levels:
             raise UndefinedLevelException("'{}' Is Not A Valid Level Name. Check Your Spelling, And Try Again.".format(name))
         self.selected_level = self.levels[name]
         self.level_changed = True
 
-    def get_object(self, name):
+    def get_object(self, name:str):
         return self.selected_level.objects[name]
 
-    def get_object_by_name(self, name):
+    def get_object_by_name(self, name:str):
         objects = []
         for block in self.selected_level.level:
             if block.name == name:
                 objects.append(block)
         return objects
 
-    def get_objects_except_name(self, name):
+    def get_objects_except_name(self, name:str):
         objects = []
         for block in self.selected_level.level:
             if block.name != name:
@@ -65,24 +66,24 @@ class Platformer:
         self.selected_level.update()
         self.selected_level.draw()
 
-    def move_all(self, objects, x, y, check_collision=True):
+    def move_all(self, objects:List['ObjectBase'], x:int, y:int, check_collision:bool=True):
         for b in objects:
             b.directional_move(x, y, check_collision=check_collision)
 
-    def move_all_with_undo(self, objects: List['ObjectBase'], x, y, player: 'ObjectBase'):
+    def move_all_with_undo(self, objects:List['ObjectBase'], x:int, y:int, player:'ObjectBase'):
         for thing in objects:
             thing.directional_move(x, y, check_collision=False)
         if player.check_collision(True):
             for thing in objects:
                 thing.undo_last_move()
 
-    def undo_last_move(self, objects=None):
+    def undo_last_move(self, objects:List['ObjectBase']=None):
         if objects is None:
             objects = self.selected_level.level
         for block in objects:
             block.undo_last_move()
 
-    def move_one_with_undo(self, thing, x, y):
+    def move_one_with_undo(self, thing:'ObjectBase', x:int, y:int):
         thing.directional_move(x, y, check_collision=False)
         if thing.check_collision():
             thing.undo_last_move()
