@@ -7,6 +7,15 @@ from PyGE.GlobalVariable import block_size
 
 class SpriteSheet:
     def __init__(self, image:str, w:int, h:int, duration:float=None, final_size:tuple=None, invisible_color:tuple=(0, 0, 1)):
+        """
+        This class is for creating spritesheets
+        :param image: the path to the image of the sheet
+        :param w: the width of each frame in the sheet
+        :param h: the height of each frame in the sheet
+        :param duration: the number of seconds to stay on each frame
+        :param final_size: the final size to scale the image to
+        :param invisible_color: the color which is invisible (DO NOT PICK A COLOR ON YOUR SPRITESHEET!)
+        """
         self.base_image = pygame.image.load(image)
         self.images = []
         self.duration = duration
@@ -29,6 +38,14 @@ class SpriteSheet:
             y += sprite_h
 
     def get_image(self, x, y, width, height):
+        """
+        Gets a sub-image of the parent image  
+        :param x: the x pos to start the selection
+        :param y: the y pos to start the selection
+        :param width: the width of the selection
+        :param height: the heigh of the selection
+        :return: the sub-image
+        """
         image = pygame.Surface([width, height]).convert()
         image.blit(self.base_image, (0, 0), (x, y, width, height))
         image.set_colorkey(self.invisible_color)
@@ -36,6 +53,11 @@ class SpriteSheet:
 
     @property
     def current_image(self):
+        """
+        Returns the current selected image
+        This function is also used to flip between the images, \
+        and should be called in your game's main loop 
+        """
         if time() - self.last_change >= self.duration:
             self.selected_image += 1
             if self.selected_image >= len(self.images):

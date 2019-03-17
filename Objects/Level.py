@@ -1,5 +1,6 @@
 from typing import List
 
+# noinspection PyUnresolvedReferences
 from PyGE.Objects.Blocks import *
 
 try:
@@ -9,14 +10,19 @@ except ImportError:
 
 import PyGE.GlobalVariable as GlobalVariable
 from PyGE.Objects.Cache import get_font
-from PyGE.Platformer import Platformer
 from ..utils import value_or_default
 from PyGE.exceptions import UndefinedBlockException
 from pygame import Surface
 
 
 class Level:
-    def __init__(self, screen:'Surface', level_data:dict, platformer:'Platformer'):
+    def __init__(self, screen:'Surface', level_data:dict, platformer):
+        """
+        This class is a level (or, one single map) in the game
+        :param screen: The pygame surface to draw the level to
+        :param level_data: A dictionary containing all of the level data to render
+        :param platformer: The instance of the Platformer class, which this level lives in
+        """
         self.screen = screen
         self.level_data = level_data
         self.level = []
@@ -29,12 +35,21 @@ class Level:
         self.create_map()
 
     def create_map(self, level_data:dict=None):
+        """
+        Executes the creation of the level
+        :param level_data: the dictionary of data to build the level with. If not specified, the initial level data will be used
+        """
         if level_data is None:
             level_data = self.level_data
 
         self.__get_blocks(level_data)
 
     def __get_blocks(self, ld:dict):
+        """
+        Loads all of the level data into the level object
+        :param ld: the data to load
+        """
+
         blocks = ld["blocks"]
         level = ld["map"]
         self.properties = ld["properties"]
@@ -87,11 +102,18 @@ class Level:
             y += self.block_size[1]
 
     def update(self):
+        """
+        Updates each object in the level, as well as runs the garbage collector
+        """
         self.cleanup()
         for block in self.level:
             block.update()
 
     def draw(self):
+        """
+        Draws each object in the level to the Pygame surface
+        This includes blocks, and text
+        """
         for block in self.level:
             block.draw()
 
@@ -99,16 +121,29 @@ class Level:
             self.screen.blit(t['text'], (t['x'], t['y']))
 
     def cleanup(self):
+        """
+        Deletes any objects which are queued for deletion
+        """
         for obj in GlobalVariable.delete_queue:
             if obj in GlobalVariable.delete_queue:
                 self.level.remove(obj)
             GlobalVariable.delete_queue.remove(obj)
 
-    def move(self, objects: List['ObjectBase'], x:int, y:int):
+    @staticmethod
+    def move(objects: List['ObjectBase'], x:int, y:int):
+        """
+        Performs a directional movement on all of the objects
+        :param objects: the list of objects to move
+        :param x: the x change for each object
+        :param y: the y object for each object
+        """
         for o in objects:
             o.x += x
             o.y += y
 
     def reset_level(self):
+        """
+        Reset the position of each object in the level 
+        """
         for l in self.level:
             l.reset_pos()

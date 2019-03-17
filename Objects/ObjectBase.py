@@ -1,7 +1,7 @@
-import pygame
-
 from math import sin, cos, degrees
 from time import time
+
+import pygame
 
 import PyGE.GlobalVariable as GlobalVariable
 from PyGE.Objects.Cache import get_image, get_spritesheet
@@ -11,11 +11,12 @@ from ..exceptions import DisplayMethodNotDefinedException
 
 
 class ObjectBase:
-    """
-    This is the class which every block/entity, which is placed in the level map MUST inherit from.
-    This class takes care of all the basic functions for a block. You can overide anything you need.
-    """
-    def __init__(self, **kwargs:dict):
+    def __init__(self, **kwargs):
+        """
+        This is the base class for EVERY object.
+        EVERY custom object MUST inherit from this class!
+        :param kwargs: a dictionary of configurations (do not instantiate this, or a child class yourself)
+        """
         self.kwargs = kwargs
 
         # mandatory arguements
@@ -77,23 +78,21 @@ class ObjectBase:
     @property
     def get_pos(self):
         """
-        Returns the x and y position of the top-left corner of the object as a tuple.
-        This is the floating-point value of the coordinates.
+        Returns the position of the object as a tuple
         """
         return self.x, self.y
 
     @property
     def get_pos_int(self):
         """
-        Returns the x and y position of the top-left corner of the object as a tuple.
-        This is the rounded integer value of the coordinates.
+        Returns the position of the object as a tuple of rounded integers
         """
         return int(round(self.x, 0)), int(round(self.y, 0))
 
     @property
     def hitbox(self):
         """
-        Returns the object's hitbox as Pygame.rect object.
+        Returns the hitbox of the object as a Pygame Rect object
         """
         return pygame.draw.rect(self.screen, (0, 0, 0), (self.x, self.y, self.w, self.h), 1)
 
@@ -156,12 +155,17 @@ class ObjectBase:
     def draw_hitbox(self, color:tuple=None, thickness:int=1):
         """
         Draws the hitbox of the object to the screen (handy for debugging).
+        :param color: the color to dwaw ths hitbox in (if not specified, white will be used)
+        :param thickness: the thickness of the box (if not specified, 1px thickness is used. 0 results in the box being filled in
         """
         if color is None:
             color = (255, 255, 255)
         pygame.draw.rect(self.screen, color, self.hitbox, thickness)
 
     def draw(self):
+        """
+        Draws the object (and hitbox, if requested) to the screen 
+        """
         if self.visible is True:
             if self.color is not None:
                 pygame.draw.rect(self.screen, self.color, (self.x, self.y, self.w, self.h))
@@ -173,6 +177,7 @@ class ObjectBase:
     def check_collision(self, collision_action:bool=True):
         """
         Checks collision between this object, and the rest of the objects in the level 
+        :param collision_action: if a collision is detected, should the on_collision event be triggered
         """
         collide = False
         for item in self.level:
@@ -195,6 +200,9 @@ class ObjectBase:
     def directional_move(self, x_change:float, y_change:float, check_collision:bool=True):
         """
         Moves the object along a directional vector (use rotational_move to move along an angle vector)
+        :param x_change: the distance to move the objects x position
+        :param y_change: the distance to move the objects y position
+        :param check_collision: should the object check for collision on completion
         """
         x_change *= self.speed
         y_change *= self.speed
@@ -216,6 +224,8 @@ class ObjectBase:
     def rotational_move(self, distance:float, angle:float=None):
         """
         Moves the object a set distance at a specified angle (degrees)
+        :param distance: the distance to move the object by
+        :param angle: the angle to move the object at (default is the object's angle)
         """
         if angle is None:
             angle = self.angle
@@ -227,7 +237,9 @@ class ObjectBase:
 
     def has_collided(self, other:'ObjectBase'):
         """
-        Check if this object has collided with the specified object 
+        Check if this object has collided with the specified object
+        :param other: the object to check if collision has happened
+        :return: if there is collision between the objects 
         """
         x1 = self.x
         y1 = self.y
@@ -258,6 +270,7 @@ class ObjectBase:
     def jump(self, jump_velocity:float):
         """
         Causes the object to jump at the specified jump velocity 
+        :param jump_velocity: The initial velocity of the object's jump (in the y direction)
         """
         if self.multi_jump is True:
             self.vertical_velocity = jump_velocity
@@ -268,6 +281,7 @@ class ObjectBase:
     def set_state(self, state:str):
         """
         Set the object's state 
+        :param state: the name of the new state
         """
         self.state = state
         self.on_state_change(state)
@@ -281,14 +295,27 @@ class ObjectBase:
     def set_level(self, name:str):
         """
         Set the selected level 
+        :param name: the name of the level to set
         """
         self.platformer.set_level(name)
 
     def on_state_change(self, new_state:str):
+        """
+        A method to overload which is called when the object's state changes
+        :param new_state: the name of the new state
+        """
         pass
 
     def on_collision(self, other: 'ObjectBase'):
+        """
+        A method to overload which is called when the object collides with another object
+        :param other: the object this object has collided with
+        """
         pass
 
     def on_click(self, clicked: tuple):
+        """
+        A method to overload which is called when the object is clicked by the mouse
+        :param clicked: a tuple of the click combination - (left_mouse, mouse_wheel, right_mouse)
+        """
         pass
